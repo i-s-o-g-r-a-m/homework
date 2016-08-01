@@ -28,9 +28,11 @@ reason or reasons are there? Fill in your explanation(s) below.
 
     Reason:
 
-    1) ???
+    1) Multiple rate areas can be associated with a given zip code,
+       so in those cases we do not know which rate area to use when
+       finding plan rates.
 
-    2) ???
+    2) Sometimes no plans can be found for a given rate area.
 
 Additional information
 ----------------------
