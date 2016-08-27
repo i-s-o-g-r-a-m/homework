@@ -1,0 +1,16 @@
+{
+    "version": "1.0.0",
+    "summary": "hhbuilder using elm",
+    "repository": "https://github.com/i-s-o-g-r-a-m/homework/tree/elm",
+    "license": "BSD3",
+    "source-directories": [
+       "src",
+        "test"
+    ],
+    "exposed-modules": [],
+    "dependencies": {
+        "elm-lang/core": "4.0.5 <= v < 5.0.0",
+        "elm-lang/html": "1.1.0 <= v < 2.0.0"
+    },
+    "elm-version": "0.17.1 <= v < 0.18.0"
+}
