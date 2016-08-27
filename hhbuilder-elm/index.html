@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Household builder</title>
+        <style>
+            .debug {
+                font-family: monospace;
+                border: 1px solid black;
+                padding: 10px;
+                display: none;
+            }
+        </style>
+    </head>
+    <body id="body">
+        <script type="text/javascript" src="main.js"></script>
+        <script type="text/javascript">
+            var div = document.getElementById('body');
+            var app = Elm.App.embed(div);
+            app.ports.alert.subscribe(function(message) {
+                window.alert(message);
+            });
+        </script>
+    </body>
+
+</html>
