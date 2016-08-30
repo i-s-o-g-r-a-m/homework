@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
     "summary": "hhbuilder using elm",
-    "repository": "https://github.com/i-s-o-g-r-a-m/homework/tree/elm",
+    "repository": "https://github.com/i-s-o-g-r-a-m/homework.git",
     "license": "BSD3",
     "source-directories": [
        "src",
