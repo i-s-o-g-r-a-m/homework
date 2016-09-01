@@ -7875,30 +7875,61 @@ var _i_s_o_g_r_a_m$homework$CustomEvents$onClickNoSubmit = function (message) {
 		{preventDefault: true, stopPropagation: false},
 		_elm_lang$core$Json_Decode$succeed(message));
 };
+var _i_s_o_g_r_a_m$homework$Main$validate = function (model) {
+	return {
+		age: function () {
+			if (_elm_lang$core$Native_Utils.eq(model.age, '')) {
+				return 'Age is required';
+			} else {
+				var _p0 = _elm_lang$core$String$toInt(
+					_elm_lang$core$String$trim(model.age));
+				if (_p0.ctor === 'Err') {
+					return 'Age must be a number greater than 0';
+				} else {
+					return (_elm_lang$core$Native_Utils.cmp(_p0._0, 1) < 0) ? 'Age must be a number greater than 0' : '';
+				}
+			}
+		}(),
+		relationship: _elm_lang$core$Native_Utils.eq(model.relationship, '') ? 'Relationship is required' : ''
+	};
+};
 var _i_s_o_g_r_a_m$homework$Main$update = F2(
 	function (msg, model) {
-		var _p0 = msg;
-		switch (_p0.ctor) {
+		var _p1 = msg;
+		switch (_p1.ctor) {
 			case 'AddMember':
-				return model;
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{
+						errors: _i_s_o_g_r_a_m$homework$Main$validate(model)
+					});
 			case 'Age':
 				return _elm_lang$core$Native_Utils.update(
 					model,
-					{age: _p0._0});
+					{age: _p1._0});
 			case 'Relationship':
 				return _elm_lang$core$Native_Utils.update(
 					model,
-					{relationship: _p0._0});
+					{relationship: _p1._0});
 			default:
 				return _elm_lang$core$Native_Utils.update(
 					model,
-					{smoker: _p0._0});
+					{smoker: _p1._0});
 		}
 	});
-var _i_s_o_g_r_a_m$homework$Main$model = {age: '', relationship: '', smoker: false};
-var _i_s_o_g_r_a_m$homework$Main$Model = F3(
-	function (a, b, c) {
-		return {age: a, relationship: b, smoker: c};
+var _i_s_o_g_r_a_m$homework$Main$model = {
+	age: '',
+	relationship: '',
+	smoker: false,
+	errors: {age: '', relationship: ''}
+};
+var _i_s_o_g_r_a_m$homework$Main$Model = F4(
+	function (a, b, c, d) {
+		return {age: a, relationship: b, smoker: c, errors: d};
+	});
+var _i_s_o_g_r_a_m$homework$Main$ValidationErrors = F2(
+	function (a, b) {
+		return {age: a, relationship: b};
 	});
 var _i_s_o_g_r_a_m$homework$Main$AddMember = {ctor: 'AddMember'};
 var _i_s_o_g_r_a_m$homework$Main$Smoker = function (a) {
@@ -7911,7 +7942,7 @@ var _i_s_o_g_r_a_m$homework$Main$Age = function (a) {
 	return {ctor: 'Age', _0: a};
 };
 var _i_s_o_g_r_a_m$homework$Main$view = function (model) {
-	var _p1 = A2(_elm_lang$core$Debug$log, 'model', model);
+	var _p2 = A2(_elm_lang$core$Debug$log, 'rendering view with', model);
 	return A2(
 		_elm_lang$html$Html$div,
 		_elm_lang$core$Native_List.fromArray(

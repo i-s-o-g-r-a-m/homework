@@ -5,6 +5,7 @@ import Html exposing (..)
 import Html.App as Html
 import Html.Attributes exposing (..)
 import Html.Events exposing (onCheck, onInput)
+import String
 import CustomEvents exposing (onClickNoSubmit)
 
 
@@ -20,12 +21,23 @@ type alias Model =
     { age : String
     , relationship : String
     , smoker : Bool
+    , errors : ValidationErrors
+    }
+
+
+type alias ValidationErrors =
+    { age : String
+    , relationship : String
     }
 
 
 model : Model
 model =
-    { age = "", relationship = "", smoker = False }
+    { age = ""
+    , relationship = ""
+    , smoker = False
+    , errors = { age = "", relationship = "" }
+    }
 
 
 
@@ -43,7 +55,7 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         AddMember ->
-            model
+            { model | errors = validate model }
 
         Age age ->
             { model | age = age }
@@ -63,7 +75,7 @@ view : Model -> Html Msg
 view model =
     let
         _ =
-            Debug.log "model" model
+            Debug.log "rendering view with" model
     in
         div []
             [ h1 [] [ text "Household builder" ]
@@ -110,6 +122,29 @@ view model =
                 ]
             , pre [ class "debug" ] []
             ]
+
+
+validate : Model -> ValidationErrors
+validate model =
+    { age =
+        if model.age == "" then
+            "Age is required"
+        else
+            case String.toInt (String.trim model.age) of
+                Err msg ->
+                    "Age must be a number greater than 0"
+
+                Ok val ->
+                    if val < 1 then
+                        "Age must be a number greater than 0"
+                    else
+                        ""
+    , relationship =
+        if model.relationship == "" then
+            "Relationship is required"
+        else
+            ""
+    }
 
 
 
