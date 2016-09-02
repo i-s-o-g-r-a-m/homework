@@ -17,17 +17,26 @@ main =
 -- MODEL
 
 
+type alias Member =
+    { age : String
+    , relationship : String
+    , smoker : Bool
+    }
+
+
 type alias Model =
     { age : String
     , relationship : String
     , smoker : Bool
     , errors : ValidationErrors
+    , household : List Member
     }
 
 
 type alias ValidationErrors =
     { age : String
     , relationship : String
+    , hasErrors : Bool
     }
 
 
@@ -36,7 +45,8 @@ model =
     { age = ""
     , relationship = ""
     , smoker = False
-    , errors = { age = "", relationship = "" }
+    , errors = ValidationErrors "" "" False
+    , household = []
     }
 
 
@@ -55,7 +65,25 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         AddMember ->
-            { model | errors = validate model }
+            let
+                updated =
+                    { model | errors = validate model }
+
+                newMember =
+                    { age = updated.age
+                    , relationship = updated.relationship
+                    , smoker = updated.smoker
+                    }
+            in
+                if updated.errors.hasErrors then
+                    updated
+                else
+                    { updated
+                        | household = updated.household ++ [ newMember ]
+                        , age = ""
+                        , relationship = ""
+                        , smoker = False
+                    }
 
         Age age ->
             { model | age = age }
@@ -87,14 +115,18 @@ view model =
                         [ label []
                             [ text "Age"
                             , text " "
-                            , input [ type' "text", onInput Age ] []
+                            , input [ type' "text", onInput Age, value model.age ] []
                             ]
+                        , span [ style [ ( "color", "red" ) ] ] [ text (" " ++ model.errors.age) ]
                         ]
                     , div []
                         [ label []
                             [ text "Relationship"
                             , text " "
-                            , select [ onInput Relationship ]
+                            , select
+                                [ onInput Relationship
+                                , value model.relationship
+                                ]
                                 [ option [ value "" ] [ text "---" ]
                                 , option [ value "self" ] [ text "Self" ]
                                 , option [ value "spouse" ] [ text "Spouse" ]
@@ -104,12 +136,13 @@ view model =
                                 , option [ value "other" ] [ text "Other" ]
                                 ]
                             ]
+                        , span [ style [ ( "color", "red" ) ] ] [ text (" " ++ model.errors.relationship) ]
                         ]
                     , div []
                         [ label []
                             [ text "Smoker?"
                             , text " "
-                            , input [ type' "checkbox", name "smoker", onCheck Smoker ] []
+                            , input [ type' "checkbox", name "smoker", onCheck Smoker, checked model.smoker ] []
                             ]
                         ]
                     , div []
@@ -126,37 +159,28 @@ view model =
 
 validate : Model -> ValidationErrors
 validate model =
-    { age =
-        if model.age == "" then
-            "Age is required"
-        else
-            case String.toInt (String.trim model.age) of
-                Err msg ->
-                    "Age must be a number greater than 0"
+    let
+        age =
+            if model.age == "" then
+                "age is required"
+            else
+                case String.toInt (String.trim model.age) of
+                    Err msg ->
+                        "age must be a number greater than 0"
 
-                Ok val ->
-                    if val < 1 then
-                        "Age must be a number greater than 0"
-                    else
-                        ""
-    , relationship =
-        if model.relationship == "" then
-            "Relationship is required"
-        else
-            ""
-    }
+                    Ok val ->
+                        if val < 1 then
+                            "age must be a number greater than 0"
+                        else
+                            ""
 
-
-
-{-
-   viewValidation : Model -> Html msg
-   viewValidation model =
-       let
-           ( color, message ) =
-               if model.password == model.passwordAgain then
-                   ( "green", "OK" )
-               else
-                   ( "red", "Passwords do not match!" )
-       in
-           div [ style [ ( "color", color ) ] ] [ text message ]
--}
+        relationship =
+            if model.relationship == "" then
+                "relationship is required"
+            else
+                ""
+    in
+        { age = age
+        , relationship = relationship
+        , hasErrors = age /= "" || relationship /= ""
+        }
