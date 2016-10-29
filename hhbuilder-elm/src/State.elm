@@ -59,7 +59,7 @@ update msg model =
 
         RemoveMember memberIdx ->
             -- just having fun with map and filter here, hey look we're doing
-            -- functional programing, come on, but this isn't readable;
+            -- functional programming, come on, but this isn't readable;
             -- probably you could do this more concisely using Array.slice
             ( let
                 updatedHousehold =
